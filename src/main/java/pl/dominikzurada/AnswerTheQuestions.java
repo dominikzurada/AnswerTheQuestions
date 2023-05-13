@@ -27,8 +27,8 @@ public class AnswerTheQuestions {
 
     public static void StartApp() {
         String fileName;
-        int firstOptionChoice = SelectFirstOption();
-        if (firstOptionChoice == 0) {
+        String firstOptionChoice = SelectFirstOption();
+        if (firstOptionChoice.equals("0")) {
             String returnedAnswer;
             File fileWithQAndA;
             fileWithQAndA = WriteNameOfFileToBeCreated();
@@ -48,28 +48,8 @@ public class AnswerTheQuestions {
                 numberOfQuestions = Long.parseLong(returnedData.get(1));
             } while (!returnedAnswer.equalsIgnoreCase("exit"));
         }
-        if (firstOptionChoice == 1) {
-            fileName = AskForFileName();
-            FileReader reader = null;
-            Yaml yaml = new Yaml();
-            try {
-                reader = new FileReader(fileName + ".yml");
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            HashMap<Integer, HashMap<String, String>> dataOfFile = yaml.load(reader);
-            ArrayList<Integer> returnedData = AskQuestionAndSendAnswer(dataOfFile);
-            int correctAnswers = returnedData.get(0);
-            int allAnswers = returnedData.get(1);
-            System.out.println();
-            System.out.println();
-            System.out.println("-> -------------------------------");
-            System.out.println("-> SUMMARY:");
-            System.out.println("-> You answered correctly for " + correctAnswers + "/" + allAnswers + " questions!");
-            System.out.println("-> -------------------------------");
-        }
-        if (firstOptionChoice == 2) {
+
+        if (firstOptionChoice.equals("1")) {
             ArrayList<String> returnedData;
             fileName = WriteNameOfFileThatYouWantEdit();
             DumperOptions options = new DumperOptions();
@@ -111,17 +91,64 @@ public class AnswerTheQuestions {
             }
             yaml.dump(dataOfFile, fileWriter);
         }
+
+
+        if (firstOptionChoice.equals("2") || firstOptionChoice.equals("3")) {
+            fileName = AskForFileName();
+            FileReader reader = null;
+            Yaml yaml = new Yaml();
+            try {
+                reader = new FileReader(fileName + ".yml");
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            HashMap<Integer, HashMap<String, String>> dataOfFile = yaml.load(reader);
+            ArrayList<Integer> returnedData;
+
+            if (firstOptionChoice.equals("2")) {
+                 returnedData = AskQuestionAndSendAnswer(dataOfFile, true);
+               } else {
+                 returnedData = AskQuestionAndSendAnswer(dataOfFile, false);
+              }
+            int correctAnswers = returnedData.get(0);
+            int allAnswers = returnedData.get(1);
+            String questionsOrAnswers;
+            if (returnedData.get(2) == 1) {
+                 questionsOrAnswers = "questions";
+            } else {
+                questionsOrAnswers = "answers";
+            }
+            System.out.println();
+            System.out.println();
+            System.out.println("-> -------------------------------");
+            System.out.println("-> SUMMARY:");
+            System.out.println("-> You answered correctly for " + correctAnswers + "/" + allAnswers + " " + questionsOrAnswers +"!");
+            System.out.println("-> -------------------------------");
+
+        }
     }
 
 
 
-    public static Integer SelectFirstOption() {
-        System.out.println("-> Type \"0\" if you want to create file with new questions and answers.");
-        System.out.println("-> Type \"1\" if you want to be quizzed from selected file.");
-        System.out.println("-> Type \"2\" if you want to add new questions and answers to an existing file.");
+    public static String SelectFirstOption() {
 
-        Scanner selectOption = new Scanner(System.in);
-        return selectOption.nextInt();
+        String selectedOption;
+
+        do {
+            System.out.println("-> ---[CREATING LIST OF QUESTIONS]---");
+            System.out.println("-> Type \"0\" if you want to create file with new questions and answers.");
+            System.out.println("-> Type \"1\" if you want to add new questions and answers to an existing file.");
+            System.out.println("-> ---[QUIZZING USING PROGRAM]---");
+            System.out.println("-> Type \"2\" if you want to be just quizzed from selected file.");
+            System.out.println("-> Type \"3\" if you want to be quizzed like writing questions to displayed answers");
+            Scanner selectOption = new Scanner(System.in);
+
+            selectedOption = selectOption.nextLine();
+
+        } while(!(selectedOption.equals("0") || selectedOption.equals("1") || selectedOption.equals("2") || selectedOption.equals("3")));
+
+        return selectedOption;
     }
 
     public static File WriteNameOfFileToBeCreated() {
