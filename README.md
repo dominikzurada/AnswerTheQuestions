@@ -1,4 +1,4 @@
-## Answer to Questions. Simply and useful project!
+## Answer the Questions. Simply and useful project!
 
 * [Idea](#idea)
 * [Description](#description)
@@ -15,7 +15,7 @@ It's a terminal-based app created in Java. App allows to among other things:
 * create lists of questions with answers saved in YAML text files.
 * be quizzed by the application from a selected list of questions (from YAML text file) in a random order.
 * be quizzed in reverse order (like you have to write correct questions for displayed answers).
-* add new questions and answers to an  existing file.
+* add new questions and answers to an existing file.
 
 # Technologies
 * SnakeYAML (version 2.0)
